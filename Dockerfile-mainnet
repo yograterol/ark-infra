@@ -1,21 +1,37 @@
-FROM alpine
+FROM node:6
 
 MAINTAINER Yohan Graterol <yohangraterol92@gmail.com>
 
-RUN apk --no-cache add wget
+RUN apt-get install wget bash git python curl
 
-RUN adduser -D -u 1000 ark-user
+ENV DB_HOST localhost
+
+ENV DB_USER root
+
+ENV DB_PASSWORD password
+
+RUN  npm install -g pkg grunt-cli
 
 COPY mainnet/entrypoint.sh /usr/local/bin
 
-RUN wget ark-user
+USER node
 
-RUN wget https://raw.githubusercontent.com/ArkEcosystem/ark-node/development/config.mainnet.json
+WORKDIR /home/node/
 
-RUN wget https://raw.githubusercontent.com/ArkEcosystem/ark-node/development/genesisBlock.mainnet.json
+COPY ark-to-bin.sh .
+
+RUN ./ark-to-bin.sh
+
+RUN cd ark
+
+RUN mkdir logs
+
+COPY mainnet/config.mainnet.json .
+
+COPY mainnet/genesisBlock.mainnet.json .
 
 EXPOSE 4001
 
 ENTRYPOINT ["entrypoint.sh"]
 
-CMD []
+CMD ["./ark/ark-node", "--genesis", "genesisBlock.mainnet.json", "--config", "config.mainnet.json"]
