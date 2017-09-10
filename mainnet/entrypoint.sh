@@ -10,7 +10,10 @@ if [ "$DB_USER" != 'root' ]; then
 fi
 
 if [ "$DB_PASSWORD" != 'password' ]; then
-  sed -i -e 's/"password",/"'$DB_PASSWORD'","/g' config.mainnet.json
+  sed -i -e 's/"password",/"'$DB_PASSWORD'",/g' config.mainnet.json
 fi
+
+# Wait for postgres
+sleep 30
 
 exec "$@"
