@@ -1,0 +1,21 @@
+FROM alpine
+
+MAINTAINER Yohan Graterol <yohangraterol92@gmail.com>
+
+RUN apk --no-cache add wget
+
+RUN adduser -D -u 1000 ark-user
+
+COPY mainnet/entrypoint.sh /usr/local/bin
+
+RUN wget ark-user
+
+RUN wget https://raw.githubusercontent.com/ArkEcosystem/ark-node/development/config.mainnet.json
+
+RUN wget https://raw.githubusercontent.com/ArkEcosystem/ark-node/development/genesisBlock.mainnet.json
+
+EXPOSE 4001
+
+ENTRYPOINT ["entrypoint.sh"]
+
+CMD []
