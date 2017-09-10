@@ -1,0 +1,21 @@
+version: '3'
+services:
+  ark-mainnet:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile-mainnet
+    ports:
+      - "4001:4001"
+    depends_on:
+      - ark-postgresql
+    environment:
+      DB_USER: ark_user
+      DB_PASSWORD: ark_password
+      DB_HOST: ark-postgresql
+  ark-postgresql:
+    image: postgres
+    environment:
+      POSTGRES_DB: ark_mainnet
+      POSTGRES_USER: ark_user
+      POSTGRES_PASSWORD: ark_password
